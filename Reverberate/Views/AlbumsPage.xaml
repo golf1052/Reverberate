@@ -1,0 +1,47 @@
+﻿<Page
+    x:Class="Reverberate.Views.AlbumsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reverberate.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="using:Reverberate.UserControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding AlbumsPageInstance, Source={StaticResource Locator}}">
+
+    <Grid>
+        <Grid.Resources>
+            <CollectionViewSource x:Name="AlbumGroupInfo" IsSourceGrouped="True" Source="{x:Bind Vm.AlbumGrouping}"/>
+        </Grid.Resources>
+        <SemanticZoom>
+            <SemanticZoom.ZoomedInView>
+                <ListView x:Name="AlbumsListView" ItemsSource="{Binding Source={StaticResource AlbumGroupInfo}}" IsItemClickEnabled="True" ItemClick="AlbumsListView_ItemClick" SelectionMode="None">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Key}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumItem />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </SemanticZoom.ZoomedInView>
+            <SemanticZoom.ZoomedOutView>
+                <GridView x:Name="GridView" SelectionMode="None" ItemsSource="{x:Bind AlbumGroupInfo.View.CollectionGroups, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Group.Key}"/>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </SemanticZoom.ZoomedOutView>
+        </SemanticZoom>
+    </Grid>
+</Page>

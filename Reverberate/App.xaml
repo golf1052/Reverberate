@@ -2,6 +2,10 @@
     x:Class="Reverberate.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Reverberate">
-
+    xmlns:local="using:Reverberate"
+    xmlns:vm="using:Reverberate.ViewModels">
+    <Application.Resources>
+        <vm:ViewModelLocator xmlns:vm="using:Reverberate.ViewModels" x:Key="Locator" x:Name="VML"/>
+        <SolidColorBrush x:Name="SpotifyGreen" Color="#1DB954"/>
+    </Application.Resources>
 </Application>

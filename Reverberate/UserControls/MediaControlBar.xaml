@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="Reverberate.UserControls.MediaControlBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reverberate.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="64"
+    d:DesignWidth="640"
+    DataContext="{Binding MediaControlBarInstance, Source={StaticResource Locator}}">
+
+    <Grid>
+        <CommandBar IsDynamicOverflowEnabled="False" OverflowButtonVisibility="Collapsed">
+            <CommandBar.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <controls:ImageEx Source="{x:Bind Vm.AlbumImageUrl, Mode=OneWay}" IsCacheEnabled="True" Width="48" Height="48"/>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0">
+                        <TextBlock Text="{x:Bind Vm.TrackTitle, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{x:Bind Vm.TrackArtist, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </Grid>
+            </CommandBar.Content>
+            <AppBarButton x:Name="ShuffleButton" Icon="Shuffle" Label="Shuffle" Width="48" Click="ShuffleButton_Click" Visibility="{x:Bind Vm.ShuffleButtonVisible, Mode=OneWay}"/>
+            <AppBarButton x:Name="PreviousButton" Icon="Previous" Label="Previous" Width="48" Click="PreviousButton_Click"/>
+            <AppBarButton x:Name="PlayPauseButton" Label="{x:Bind Vm.PlayPauseLabel, Mode=OneWay}" Width="32" Click="PlayPauseButton_Click">
+                <AppBarButton.Icon>
+                    <SymbolIcon Symbol="{x:Bind Vm.PlayPauseIcon, Mode=OneWay}"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="NextButton" Label="Next" Icon="Next" Width="48" Click="NextButton_Click"/>
+            <AppBarButton x:Name="RepeatButton" Label="Repeat" Icon="RepeatAll" Width="48" Click="RepeatButton_Click" Visibility="{x:Bind Vm.RepeatButtonVisible, Mode=OneWay}"/>
+            <AppBarButton x:Name="DevicesButton" Label="Devices" Click="DevicesButton_Click" Width="48" Visibility="{x:Bind Vm.DevicesButtonVisible, Mode=OneWay}" Foreground="{x:Bind Vm.DevicesButtonColor, Mode=OneWay}" Flyout="{x:Bind Vm.DevicesMenuFlyout, Mode=OneWay}">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xEBDE;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+    </Grid>
+</UserControl>

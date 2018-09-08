@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Reverberate.ViewModels;
+using Reverberate.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -30,6 +32,17 @@ namespace Reverberate
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            this.EnteredBackground += App_EnteredBackground;
+            this.LeavingBackground += App_LeavingBackground;
+        }
+
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+        }
+
+        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
         }
 
         /// <summary>
@@ -66,7 +79,7 @@ namespace Reverberate
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(LoginPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
