@@ -42,9 +42,9 @@ namespace Reverberate.Views
             await Vm.OnNavigatedTo();
         }
 
-        private async void AlbumsListView_ItemClick(object sender, ItemClickEventArgs e)
+        private void AlbumsListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await Vm.AlbumsListView_ItemClick(e.ClickedItem as SpotifyAlbum);
+            Vm.AlbumsListView_ItemClick(e.ClickedItem as SpotifyAlbum);
         }
     }
 }

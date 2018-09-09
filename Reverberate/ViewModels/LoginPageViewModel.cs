@@ -16,9 +16,9 @@ namespace Reverberate.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
-        private readonly INavigationService navigationService;
+        private readonly NavigationService navigationService;
 
-        public LoginPageViewModel(INavigationService navigationService)
+        public LoginPageViewModel(NavigationService navigationService)
         {
             this.navigationService = navigationService;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Reverb.Models;
 using Reverberate.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -34,6 +35,26 @@ namespace Reverberate.Views
         public AlbumDetailPage()
         {
             this.InitializeComponent();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            await Vm.OnNavigatedTo((SpotifyAlbum)e.Parameter);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            Vm.OnNavigatingFrom();
+        }
+
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Vm.PlayButton_Click();
+        }
+
+        private async void TracksListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            await Vm.TracksListView_ItemClick((SpotifyTrack)e.ClickedItem);
         }
     }
 }

@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="AppConstants.cs" />
     <Compile Include="HelperMethods.cs" />
+    <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

@@ -26,7 +26,7 @@ namespace Reverberate.UserControls
         private int trackNumber;
         public int TrackNumber
         {
-            get { return TrackNumber; }
+            get { return trackNumber; }
             set { trackNumber = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TrackNumber))); }
         }
 
@@ -77,7 +77,8 @@ namespace Reverberate.UserControls
                 AddSaveIcon = Symbol.Accept;
                 TrackTitle = Model.Name;
                 IsExplicit = Model.Explicit;
-                TrackLength = TimeSpan.FromMilliseconds(Model.Duration).ToString();
+                TimeSpan trackLength = TimeSpan.FromMilliseconds(Model.Duration);
+                TrackLength = trackLength.MinimalToString();
             }
         }
     }

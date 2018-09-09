@@ -14,22 +14,27 @@
     <Grid>
         <ScrollViewer>
             <StackPanel>
-                <controls:ImageEx Width="128" Height="128" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="Album Name" HorizontalAlignment="Center"/>
-                <TextBlock Text="Album Artist" HorizontalAlignment="Center"/>
+                <controls:ImageEx Source="{x:Bind Vm.AlbumImageUrl, Mode=OneWay}" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Vm.AlbumName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Vm.AlbumArtist, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Year" Margin="4,0"/>
-                    <TextBlock Text="# songs" Margin="4,0"/>
-                    <TextBlock Text="Length" Margin="4,0"/>
+                    <TextBlock Text="{x:Bind Vm.ReleaseDate, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Margin="4,0"/>
+                    <TextBlock Text="{x:Bind Vm.NumSongs, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Margin="4,0"/>
+                    <TextBlock Text="{x:Bind Vm.AlbumLength, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Margin="4,0"/>
                 </StackPanel>
-                <Button Content="Play" HorizontalAlignment="Center"/>
-                <Button Content="Saved" HorizontalAlignment="Center"/>
-                <ListView>
+                <Button x:Name="PlayButton" Content="Play" Background="{StaticResource SpotifyGreen}" HorizontalAlignment="Center" Margin="0,8" Width="100" Click="PlayButton_Click"/>
+                <Button Content="{x:Bind Vm.SavedSaveText, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,8" Width="100" />
+                <ListView x:Name="TracksListView" ItemsSource="{x:Bind Vm.Tracks, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="TracksListView_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <usercontrols:TrackItem/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </StackPanel>
         </ScrollViewer>

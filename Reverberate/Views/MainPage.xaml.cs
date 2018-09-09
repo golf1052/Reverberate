@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Reverberate.ViewModels;
 using Reverberate.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -25,18 +26,20 @@ namespace Reverberate
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public MainPageViewModel Vm
+        {
+            get { return (MainPageViewModel)DataContext; }
+        }
+
         public MainPage()
         {
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            MainPageFrame.Navigate(typeof(AlbumsPage));
+            Vm.SetNavigationServiceFrame(MainPageFrame);
+            Vm.OnNavigatedTo();
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Reverberate.ViewModels
 {
     public class AlbumsPageViewModel : ViewModelBase
     {
-        private readonly INavigationService navigationService;
+        private readonly NavigationService navigationService;
 
         public ObservableCollection<IGrouping<string, SpotifyAlbum>> AlbumGrouping { get; set; }
 
-        public AlbumsPageViewModel(INavigationService navigationService)
+        public AlbumsPageViewModel(NavigationService navigationService)
         {
             this.navigationService = navigationService;
             AlbumGrouping = new ObservableCollection<IGrouping<string, SpotifyAlbum>>();
@@ -61,12 +61,9 @@ namespace Reverberate.ViewModels
             AlbumGrouping.AddRange(group);
         }
 
-        public async Task AlbumsListView_ItemClick(SpotifyAlbum album)
+        public void AlbumsListView_ItemClick(SpotifyAlbum album)
         {
-            //navigationService.NavigateTo(nameof(AlbumDetailPage), album);
-            await AppConstants.SpotifyClient.Play(WebPlayerViewModel.DeviceId, album.Uri);
-            await Task.Delay(TimeSpan.FromMilliseconds(500));
-            await HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetupPlayback();
+            navigationService.NavigateTo(nameof(AlbumDetailPage), album);
         }
     }
 }

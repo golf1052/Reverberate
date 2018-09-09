@@ -17,13 +17,15 @@ namespace Reverberate.ViewModels
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             NavigationService navigationService = new NavigationService();
+            HelperMethods.NavigationService = navigationService;
             navigationService.Configure(nameof(LoginPage), typeof(LoginPage));
             navigationService.Configure(nameof(MainPage), typeof(MainPage));
             navigationService.Configure(nameof(AlbumsPage), typeof(AlbumsPage));
             navigationService.Configure(nameof(AlbumDetailPage), typeof(AlbumDetailPage));
 
-            SimpleIoc.Default.Register<INavigationService>(() => navigationService);
+            SimpleIoc.Default.Register(() => navigationService);
             SimpleIoc.Default.Register<LoginPageViewModel>();
+            SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<WebPlayerViewModel>();
             SimpleIoc.Default.Register<AlbumsPageViewModel>();
             SimpleIoc.Default.Register<MediaControlBarViewModel>();
@@ -32,42 +34,32 @@ namespace Reverberate.ViewModels
 
         public LoginPageViewModel LoginPageInstance
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<LoginPageViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<LoginPageViewModel>(); }
+        }
+
+        public MainPageViewModel MainPageInstance
+        {
+            get { return ServiceLocator.Current.GetInstance<MainPageViewModel>(); }
         }
 
         public WebPlayerViewModel WebPlayerInstance
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<WebPlayerViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<WebPlayerViewModel>(); }
         }
 
         public AlbumsPageViewModel AlbumsPageInstance
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<AlbumsPageViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<AlbumsPageViewModel>(); }
         }
 
         public MediaControlBarViewModel MediaControlBarInstance
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MediaControlBarViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<MediaControlBarViewModel>(); }
         }
 
         public AlbumDetailPageViewModel AlbumDetailPageInstance
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<AlbumDetailPageViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<AlbumDetailPageViewModel>(); }
         }
     }
 }
