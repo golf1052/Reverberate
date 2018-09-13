@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Views;
 using Reverberate.ViewModels;
+using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Media;
 
 namespace Reverberate
 {
@@ -25,6 +27,18 @@ namespace Reverberate
         public static ViewModelLocator GetViewModelLocator()
         {
             return (ViewModelLocator)App.Current.Resources["Locator"];
+        }
+
+        public static SolidColorBrush GetOppositeRequestedThemeColor()
+        {
+            if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Dark)
+            {
+                return new SolidColorBrush(Colors.White);
+            }
+            else
+            {
+                return new SolidColorBrush(Color.FromArgb(255, 29, 29, 29));
+            }
         }
 
         public static string MinimalToString(this TimeSpan timeSpan)

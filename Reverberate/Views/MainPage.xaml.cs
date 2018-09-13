@@ -41,5 +41,10 @@ namespace Reverberate
             Vm.SetNavigationServiceFrame(MainPageFrame);
             Vm.OnNavigatedTo();
         }
+
+        private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            await Vm.SearchBox_QuerySubmitted(args.QueryText);
+        }
     }
 }

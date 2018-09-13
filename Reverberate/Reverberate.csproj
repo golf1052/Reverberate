@@ -97,14 +97,22 @@
     </Compile>
     <Compile Include="AppConstants.cs" />
     <Compile Include="HelperMethods.cs" />
+    <Compile Include="UserControls\ArtistListViewItem.xaml.cs">
+      <DependentUpon>ArtistListViewItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ArtistDetailPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\SearchPageViewModel.cs" />
+    <Compile Include="Views\ArtistDetailPage.xaml.cs">
+      <DependentUpon>ArtistDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
-    <Compile Include="UserControls\AlbumItem.xaml.cs">
-      <DependentUpon>AlbumItem.xaml</DependentUpon>
+    <Compile Include="UserControls\AlbumListViewItem.xaml.cs">
+      <DependentUpon>AlbumListViewItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MediaControlBar.xaml.cs">
       <DependentUpon>MediaControlBar.xaml</DependentUpon>
@@ -130,6 +138,9 @@
     <Compile Include="Views\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -138,6 +149,10 @@
     <None Include="Reverberate_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\basiclogo.png" />
+    <Content Include="Assets\PlaceholderAlbum.png" />
+    <Content Include="Assets\PlaceholderArtist.png" />
+    <Content Include="Assets\PlaceholderPlaylist.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -154,11 +169,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="UserControls\ArtistListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ArtistDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\AlbumItem.xaml">
+    <Page Include="UserControls\AlbumListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,6 +206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

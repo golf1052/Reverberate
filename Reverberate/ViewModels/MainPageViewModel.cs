@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
+using Reverb;
+using Reverb.Models;
 using Reverberate.Views;
 using Windows.UI.Xaml.Controls;
 
@@ -27,6 +29,17 @@ namespace Reverberate.ViewModels
         public void OnNavigatedTo()
         {
             navigationService.NavigateTo(nameof(AlbumsPage));
+        }
+
+        public async Task SearchBox_QuerySubmitted(string query)
+        {
+            SpotifySearch results = await AppConstants.SpotifyClient.Search(query, new List<SpotifyConstants.SpotifySearchTypes>()
+            {
+                SpotifyConstants.SpotifySearchTypes.Album,
+                SpotifyConstants.SpotifySearchTypes.Artist,
+                SpotifyConstants.SpotifySearchTypes.Track
+            });
+            navigationService.NavigateTo(nameof(SearchPage), results);
         }
     }
 }

@@ -28,7 +28,7 @@
                     </ListView.GroupStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <usercontrols:AlbumItem />
+                            <usercontrols:AlbumListViewItem />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

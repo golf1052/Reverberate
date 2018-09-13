@@ -40,6 +40,7 @@ namespace Reverberate.ViewModels
         private static async void WebView_ScriptNotify(object sender, NotifyEventArgs e)
         {
             JObject message = JObject.Parse(e.Value);
+            Debug.WriteLine(message);
             if (message["windowReady"] != null)
             {
                 windowReady = (bool)message["windowReady"];
@@ -92,7 +93,10 @@ namespace Reverberate.ViewModels
                 {
                     playerReady = (bool)message["player"]["ready"];
                     DeviceId = (string)message["player"]["deviceId"];
-                    MediaControlBarViewModel.ActiveDeviceId = DeviceId;
+                    if (MediaControlBarViewModel.ActiveDeviceId == null)
+                    {
+                        MediaControlBarViewModel.ActiveDeviceId = DeviceId;
+                    }
                 }
                 if (message["player"]["state"] != null)
                 {

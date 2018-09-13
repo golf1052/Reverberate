@@ -36,6 +36,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+            <AutoSuggestBox x:Name="SearchBox" QueryIcon="Find" Grid.Row="0" VerticalAlignment="Center" Margin="50,0,8,0" Background="{ThemeResource SystemControlHighlightChromeAltLowBrush}" QuerySubmitted="SearchBox_QuerySubmitted"/>
             <Frame x:Name="MainPageFrame" Grid.Row="1"/>
             <usercontrols:MediaControlBar Grid.Row="2"/>
             <usercontrols:WebPlayer Grid.Row="2"/>

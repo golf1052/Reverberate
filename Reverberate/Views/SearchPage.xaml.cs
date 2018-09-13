@@ -22,25 +22,24 @@ namespace Reverberate.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumDetailPage : Page
+    public sealed partial class SearchPage : Page
     {
-        public AlbumDetailPageViewModel Vm
+        public SearchPageViewModel Vm
         {
-            get
-            {
-                return (AlbumDetailPageViewModel)DataContext;
-            }
+            get { return (SearchPageViewModel)DataContext; }
         }
 
-        public AlbumDetailPage()
+        public SearchPage()
         {
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            SpotifySearch results = (SpotifySearch)e.Parameter;
+            SearchPivot.Items.Remove(SearchPivot.Items.Single(p => (string)((PivotItem)p).Header == "Playlists"));
             HelperMethods.EnableBackButton();
-            await Vm.OnNavigatedTo((SpotifyAlbum)e.Parameter);
+            Vm.OnNavigatedTo(results);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -48,14 +47,19 @@ namespace Reverberate.Views
             HelperMethods.DisableBackButton();
         }
 
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Vm.PlayButton_Click();
-        }
-
         private async void TracksListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             await Vm.TracksListView_ItemClick((SpotifyTrack)e.ClickedItem);
+        }
+
+        private async void AlbumsListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            await Vm.AlbumsListView_ItemClick((SpotifyAlbum)e.ClickedItem);
+        }
+
+        private void ArtistsListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Vm.ArtistsListView_ItemClick((SpotifyArtist)e.ClickedItem);
         }
     }
 }

@@ -62,5 +62,15 @@ namespace Reverberate.UserControls
         {
 
         }
+
+        private void VolumeButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            await Vm.VolumeSlider_ValueChanged((int)e.NewValue);
+        }
     }
 }

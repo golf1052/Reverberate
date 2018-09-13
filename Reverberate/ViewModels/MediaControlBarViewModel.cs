@@ -12,6 +12,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using Reverb;
 
 namespace Reverberate.ViewModels
 {
@@ -66,6 +67,13 @@ namespace Reverberate.ViewModels
             set { repeatButtonVisible = value; RaisePropertyChanged(nameof(RepeatButtonVisible)); }
         }
 
+        private int volume;
+        public int Volume
+        {
+            get { return volume; }
+            set { volume = value; RaisePropertyChanged(nameof(Volume)); }
+        }
+
         private bool devicesButtonVisible;
         public bool DevicesButtonVisible
         {
@@ -96,6 +104,7 @@ namespace Reverberate.ViewModels
         {
             ShuffleButtonVisible = false;
             RepeatButtonVisible = false;
+            Volume = 100;
             DevicesButtonVisible = true;
             DevicesButtonColor = new SolidColorBrush(Colors.Black);
             PlayPauseIcon = Symbol.Play;
@@ -153,7 +162,7 @@ namespace Reverberate.ViewModels
             await UpdateDisplay();
         }
 
-        private void WebPlayerViewModel_WebPlaybackStateChanged(object sender, Reverb.SpotifyWebPlaybackStateEventArgs e)
+        private void WebPlayerViewModel_WebPlaybackStateChanged(object sender, SpotifyWebPlaybackStateEventArgs e)
         {
             if (e.State == null)
             {
@@ -180,6 +189,13 @@ namespace Reverberate.ViewModels
             var currentlyPlaying = await AppConstants.SpotifyClient.GetCurrentlyPlayingPlayer();
             if (currentlyPlaying != null)
             {
+                if (currentlyPlaying.Device != null)
+                {
+                    if (currentlyPlaying.Device.VolumePercent.HasValue)
+                    {
+                        Volume = currentlyPlaying.Device.VolumePercent.Value;
+                    }
+                }
                 SetDeviceButtonColor(currentlyPlaying.Device.Id);
                 if (currentlyPlaying.Track != null)
                 {
@@ -222,7 +238,7 @@ namespace Reverberate.ViewModels
         {
             if (WebPlayerViewModel.DeviceId == activeDeviceId)
             {
-                DevicesButtonColor = new SolidColorBrush(Colors.Black);
+                DevicesButtonColor = HelperMethods.GetOppositeRequestedThemeColor();
             }
             else
             {
@@ -297,6 +313,17 @@ namespace Reverberate.ViewModels
             await AppConstants.SpotifyClient.Next(MediaControlBarViewModel.ActiveDeviceId);
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await UpdateDisplay();
+        }
+
+        public async Task VolumeSlider_ValueChanged(int volume)
+        {
+            try
+            {
+                await AppConstants.SpotifyClient.SetVolume(volume, MediaControlBarViewModel.ActiveDeviceId);
+            }
+            catch (SpotifyException)
+            {
+            }
         }
     }
 }

@@ -31,7 +31,6 @@ function createPlayer() {
     player = new Spotify.Player({
         name: playerName,
         getOAuthToken: callback => {
-            // callback(accessToken);
             requestAccessToken().then(function(token) {
                 callback(token);
             });

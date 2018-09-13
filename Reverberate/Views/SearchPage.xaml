@@ -1,0 +1,48 @@
+﻿<Page
+    x:Class="Reverberate.Views.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reverberate.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="using:Reverberate.UserControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding SearchPageInstance, Source={StaticResource Locator}}">
+
+    <Grid>
+        <Pivot x:Name="SearchPivot" Title="{x:Bind Vm.SearchQuery, Mode=OneWay}">
+            <PivotItem Header="Tracks">
+                <ListView x:Name="TracksListView" ItemsSource="{x:Bind Vm.Tracks}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="TracksListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:TrackItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="Albums">
+                <ListView x:Name="AlbumsListView" ItemsSource="{x:Bind Vm.Albums}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="AlbumsListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="Artists">
+                <ListView x:Name="ArtistsListView" ItemsSource="{x:Bind Vm.Artists}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="ArtistsListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:ArtistListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="Playlists">
+                <ListView>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

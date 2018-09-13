@@ -77,8 +77,8 @@ namespace Reverberate.ViewModels
 
         public async Task OnNavigatedTo(SpotifyAlbum album)
         {
+            Tracks = new ObservableCollection<SpotifyTrack>();
             this.album = album;
-            HelperMethods.EnableBackButton();
             AlbumImageUrl = new Uri(album.GetLargestImage().Url);
             AlbumName = album.Name;
             AlbumArtist = string.Join(", ", album.Artists.Select(artist => artist.Name));
@@ -109,11 +109,6 @@ namespace Reverberate.ViewModels
                 }
             }
             AlbumLength = albumLength.MinimalToString();
-        }
-
-        public void OnNavigatingFrom()
-        {
-            HelperMethods.DisableBackButton();
         }
 
         public async Task PlayButton_Click()

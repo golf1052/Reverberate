@@ -22,17 +22,14 @@ namespace Reverberate.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumDetailPage : Page
+    public sealed partial class ArtistDetailPage : Page
     {
-        public AlbumDetailPageViewModel Vm
+        public ArtistDetailPageViewModel Vm
         {
-            get
-            {
-                return (AlbumDetailPageViewModel)DataContext;
-            }
+            get { return (ArtistDetailPageViewModel)DataContext; }
         }
 
-        public AlbumDetailPage()
+        public ArtistDetailPage()
         {
             this.InitializeComponent();
         }
@@ -40,7 +37,7 @@ namespace Reverberate.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             HelperMethods.EnableBackButton();
-            await Vm.OnNavigatedTo((SpotifyAlbum)e.Parameter);
+            await Vm.OnNavigatedTo((SpotifyArtist)e.Parameter);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -48,14 +45,29 @@ namespace Reverberate.Views
             HelperMethods.DisableBackButton();
         }
 
+        private void PopularTracksListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             await Vm.PlayButton_Click();
         }
 
-        private async void TracksListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void AlbumsListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await Vm.TracksListView_ItemClick((SpotifyTrack)e.ClickedItem);
+            await Vm.AlbumsListView_ItemClick((SpotifyAlbum)e.ClickedItem);
+        }
+
+        private async void SinglesListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            await Vm.SinglesListView_ItemClick((SpotifyAlbum)e.ClickedItem);
+        }
+
+        private void RelatedArtistsListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Vm.RelatedArtistsListView_ItemClick((SpotifyArtist)e.ClickedItem);
         }
     }
 }

@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Reverberate.UserControls
 {
-    public sealed partial class AlbumItem : UserControl, INotifyPropertyChanged
+    public sealed partial class AlbumListViewItem : UserControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -47,13 +47,10 @@ namespace Reverberate.UserControls
 
         public SpotifyAlbum Model
         {
-            get
-            {
-                return (SpotifyAlbum)DataContext;
-            }
+            get { return (SpotifyAlbum)DataContext; }
         }
 
-        public AlbumItem()
+        public AlbumListViewItem()
         {
             this.InitializeComponent();
             DataContextChanged += AlbumItem_DataContextChanged;
@@ -64,7 +61,14 @@ namespace Reverberate.UserControls
             if (Model != null)
             {
                 var highestResImage = Model.GetLargestImage();
-                AlbumImageUrl = new Uri(highestResImage.Url);
+                if (highestResImage == null)
+                {
+                    AlbumImageUrl = new Uri("ms-appx:///Assets/PlaceholderAlbum.png");
+                }
+                else
+                {
+                    AlbumImageUrl = new Uri(highestResImage.Url);
+                }
                 AlbumTitle = Model.Name;
                 AlbumArtist = string.Join(", ", Model.Artists.Select(artist => artist.Name));
             }

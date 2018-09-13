@@ -35,6 +35,26 @@
             </AppBarButton>
             <AppBarButton x:Name="NextButton" Label="Next" Icon="Next" Width="48" Click="NextButton_Click"/>
             <AppBarButton x:Name="RepeatButton" Label="Repeat" Icon="RepeatAll" Width="48" Click="RepeatButton_Click" Visibility="{x:Bind Vm.RepeatButtonVisible, Mode=OneWay}"/>
+            <AppBarButton x:Name="VolumeButton" Label="Volume" Icon="Volume" Width="48" Click="VolumeButton_Click">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Slider x:Name="VolumeSlider" Value="{x:Bind Vm.Volume, Mode=TwoWay}" Height="150" TickPlacement="Outside" HorizontalAlignment="Center" Orientation="Vertical" Maximum="100" TickFrequency="10" SnapsTo="Ticks" ValueChanged="VolumeSlider_ValueChanged">
+                            <Slider.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.ThemeDictionaries>
+                                        <ResourceDictionary x:Key="Light">
+                                            <SolidColorBrush x:Key="SliderTickBarFill" Color="Black"/>
+                                        </ResourceDictionary>
+                                        <ResourceDictionary x:Key="Dark">
+                                            <SolidColorBrush x:Key="SliderTickBarFill" Color="White"/>
+                                        </ResourceDictionary>
+                                    </ResourceDictionary.ThemeDictionaries>
+                                </ResourceDictionary>
+                            </Slider.Resources>
+                        </Slider>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton x:Name="DevicesButton" Label="Devices" Click="DevicesButton_Click" Width="48" Visibility="{x:Bind Vm.DevicesButtonVisible, Mode=OneWay}" Foreground="{x:Bind Vm.DevicesButtonColor, Mode=OneWay}" Flyout="{x:Bind Vm.DevicesMenuFlyout, Mode=OneWay}">
                 <AppBarButton.Icon>
                     <FontIcon Glyph="&#xEBDE;"/>

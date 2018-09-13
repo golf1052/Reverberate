@@ -22,6 +22,8 @@ namespace Reverberate.ViewModels
             navigationService.Configure(nameof(MainPage), typeof(MainPage));
             navigationService.Configure(nameof(AlbumsPage), typeof(AlbumsPage));
             navigationService.Configure(nameof(AlbumDetailPage), typeof(AlbumDetailPage));
+            navigationService.Configure(nameof(SearchPage), typeof(SearchPage));
+            navigationService.Configure(nameof(ArtistDetailPage), typeof(ArtistDetailPage));
 
             SimpleIoc.Default.Register(() => navigationService);
             SimpleIoc.Default.Register<LoginPageViewModel>();
@@ -30,6 +32,8 @@ namespace Reverberate.ViewModels
             SimpleIoc.Default.Register<AlbumsPageViewModel>();
             SimpleIoc.Default.Register<MediaControlBarViewModel>();
             SimpleIoc.Default.Register<AlbumDetailPageViewModel>();
+            SimpleIoc.Default.Register<SearchPageViewModel>();
+            SimpleIoc.Default.Register<ArtistDetailPageViewModel>();
         }
 
         public LoginPageViewModel LoginPageInstance
@@ -60,6 +64,16 @@ namespace Reverberate.ViewModels
         public AlbumDetailPageViewModel AlbumDetailPageInstance
         {
             get { return ServiceLocator.Current.GetInstance<AlbumDetailPageViewModel>(); }
+        }
+
+        public SearchPageViewModel SearchPageInstance
+        {
+            get { return ServiceLocator.Current.GetInstance<SearchPageViewModel>(); }
+        }
+
+        public ArtistDetailPageViewModel ArtistDetailPageInstance
+        {
+            get { return ServiceLocator.Current.GetInstance<ArtistDetailPageViewModel>(); }
         }
     }
 }

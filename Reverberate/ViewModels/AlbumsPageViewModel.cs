@@ -26,6 +26,7 @@ namespace Reverberate.ViewModels
 
         public async Task OnNavigatedTo()
         {
+            AlbumGrouping = new ObservableCollection<IGrouping<string, SpotifyAlbum>>();
             List<SpotifyAlbum> albums = new List<SpotifyAlbum>();
             var albumsList = await AppConstants.SpotifyClient.GetUserSavedAlbums();
             foreach (var album in albumsList.Items)

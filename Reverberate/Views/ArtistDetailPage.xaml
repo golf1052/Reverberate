@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="Reverberate.Views.ArtistDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reverberate.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:usercontrols="using:Reverberate.UserControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding ArtistDetailPageInstance, Source={StaticResource Locator}}">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="8,0">
+                <controls:ImageEx Source="{x:Bind Vm.ArtistImageUrl, Mode=OneWay}" Width="200" Height="200" IsCacheEnabled="True"/>
+                <TextBlock Text="{x:Bind Vm.ArtistName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,4"/>
+                <Button x:Name="PlayButton" Content="Play" Background="{StaticResource SpotifyGreen}" HorizontalAlignment="Center" Margin="0,4" Click="PlayButton_Click"/>
+                <Button Content="Follow" HorizontalAlignment="Center" Margin="0,4"/>
+                <TextBlock Text="Popular Tracks" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,4"/>
+                <ListView x:Name="PopularTracksListView" ItemsSource="{x:Bind Vm.PopularTracks, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="PopularTracksListView_ItemClick" Margin="0,4">
+                </ListView>
+                <TextBlock Text="Albums" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,4"/>
+                <ListView x:Name="AlbumsListView" ItemsSource="{x:Bind Vm.Albums, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="AlbumsListView_ItemClick" Margin="0,4">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock Text="Singles" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,4"/>
+                <ListView x:Name="SinglesListView" ItemsSource="{x:Bind Vm.Singles, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="SinglesListView_ItemClick" Margin="0,4">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock Text="Related Artists" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,4"/>
+                <ListView x:Name="RelatedArtistsListView" ItemsSource="{x:Bind Vm.RelatedArtists, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="RelatedArtistsListView_ItemClick" Margin="0,4">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:ArtistListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

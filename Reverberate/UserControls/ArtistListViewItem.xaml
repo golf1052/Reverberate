@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Reverberate.UserControls.AlbumItem"
+    x:Class="Reverberate.UserControls.ArtistListViewItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Reverberate.UserControls"
@@ -13,12 +13,9 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <controls:ImageEx Source="{x:Bind AlbumImageUrl, Mode=OneWay}" IsCacheEnabled="True" Width="64" Height="64"/>
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-            <TextBlock Text="{x:Bind AlbumTitle, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}"/>
-            <TextBlock Text="{x:Bind AlbumArtist, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"/>
-        </StackPanel>
+        <controls:ImageEx Source="{x:Bind ArtistImageUrl, Mode=OneWay}" IsCacheEnabled="True" Width="64" Height="64"/>
+        <TextBlock Text="{x:Bind ArtistName, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
