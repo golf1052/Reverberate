@@ -40,7 +40,6 @@ namespace Reverberate.ViewModels
         private static async void WebView_ScriptNotify(object sender, NotifyEventArgs e)
         {
             JObject message = JObject.Parse(e.Value);
-            Debug.WriteLine(message);
             if (message["windowReady"] != null)
             {
                 windowReady = (bool)message["windowReady"];
@@ -84,7 +83,14 @@ namespace Reverberate.ViewModels
                 string request = (string)message["request"];
                 if (request == "accessToken")
                 {
-                    await SetAccessToken(AppConstants.SpotifyClient.AccessToken);
+                    if (AppConstants.SpotifyClient.AccessTokenExpiresAt > DateTimeOffset.UtcNow)
+                    {
+                        await SetAccessToken(AppConstants.SpotifyClient.AccessToken);
+                    }
+                    else
+                    {
+                        await SetAccessToken(await AppConstants.SpotifyClient.RefreshAccessToken());
+                    }
                 }
             }
             else if (message["player"] != null)
