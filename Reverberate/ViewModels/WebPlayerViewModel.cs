@@ -134,6 +134,13 @@ namespace Reverberate.ViewModels
                     SpotifyWebPlaybackState playbackState = JsonConvert.DeserializeObject<SpotifyWebPlaybackState>(message["player"]["state"].ToString());
                     WebPlaybackStateChanged?.Invoke(null, new SpotifyWebPlaybackStateEventArgs(playbackState));
                 }
+                if (message["player"]["connected"] != null)
+                {
+                    if (!(bool)message["player"]["connected"])
+                    {
+                        HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetDisconnected();
+                    }
+                }
             }
         }
 
@@ -144,14 +151,13 @@ namespace Reverberate.ViewModels
                 var devicesList = await AppConstants.SpotifyClient.GetUserDevices();
                 if (devicesList.Count == 0)
                 {
-                    await ReconnectClient();
+                    await ReconnectPlayer();
                 }
                 else
                 {
                     if (devicesList.FirstOrDefault(device => device.Id == DeviceId) == null)
                     {
-                        await DisconnectPlayer();
-                        await ConnectPlayer();
+                        await ReconnectPlayer();
                     }
                 }
                 try
@@ -165,17 +171,18 @@ namespace Reverberate.ViewModels
             }
         }
 
-        public static async Task ReconnectClient(string deviceId)
+        public static async Task ReconnectPlayer(string deviceId)
         {
             if (deviceId == DeviceId)
             {
-                await ReconnectClient();
+                await ReconnectPlayer();
             }
         }
 
-        public static async Task ReconnectClient()
+        public static async Task ReconnectPlayer()
         {
             await DisconnectPlayer();
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
             await ConnectPlayer();
         }
 
@@ -201,6 +208,7 @@ namespace Reverberate.ViewModels
 
         public static async Task DisconnectPlayer()
         {
+            HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetDisconnected();
             await InvokeScript("disconnectPlayer");
         }
 
