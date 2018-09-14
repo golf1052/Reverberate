@@ -20,6 +20,8 @@ namespace Reverberate.UserControls
 {
     public sealed partial class MediaControlBar : UserControl
     {
+        private bool loaded = false;
+
         public MediaControlBarViewModel Vm
         {
             get
@@ -70,7 +72,15 @@ namespace Reverberate.UserControls
 
         private async void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            await Vm.VolumeSlider_ValueChanged((int)e.NewValue);
+            if (loaded)
+            {
+                await Vm.VolumeSlider_ValueChanged((int)e.NewValue);
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            loaded = true;
         }
     }
 }

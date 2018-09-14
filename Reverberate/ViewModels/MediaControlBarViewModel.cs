@@ -95,6 +95,27 @@ namespace Reverberate.ViewModels
             set { devicesMenuFlyout = value; RaisePropertyChanged(nameof(DevicesMenuFlyout)); }
         }
 
+        private bool connectionBarVisible;
+        public bool ConnectionBarVisible
+        {
+            get { return connectionBarVisible; }
+            set { connectionBarVisible = value; RaisePropertyChanged(nameof(ConnectionBarVisible)); }
+        }
+
+        private string connectionBarText;
+        public string ConnectionBarText
+        {
+            get { return connectionBarText; }
+            set { connectionBarText = value; RaisePropertyChanged(nameof(ConnectionBarText)); }
+        }
+
+        private SolidColorBrush connectionBarColor;
+        public SolidColorBrush ConnectionBarColor
+        {
+            get { return connectionBarColor; }
+            set { connectionBarColor = value; RaisePropertyChanged(nameof(ConnectionBarColor)); }
+        }
+
         private SystemMediaTransportControls systemMediaTransportControls;
         private SystemMediaTransportControlsDisplayUpdater display;
 
@@ -107,6 +128,9 @@ namespace Reverberate.ViewModels
             Volume = 100;
             DevicesButtonVisible = true;
             DevicesButtonColor = new SolidColorBrush(Colors.Black);
+            ConnectionBarVisible = false;
+            ConnectionBarColor = AppConstants.RedBrush;
+            ConnectionBarText = "Disconnected";
             PlayPauseIcon = Symbol.Play;
             systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             systemMediaTransportControls.IsPlayEnabled = true;
@@ -274,14 +298,30 @@ namespace Reverberate.ViewModels
 
         public async Task Play()
         {
-            await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId);
+            try
+            {
+                await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId);
+            }
+            catch (SpotifyException)
+            {
+                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                return;
+            }
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await SetupPlayback();
         }
 
         public async Task Pause()
         {
-            await AppConstants.SpotifyClient.Pause(MediaControlBarViewModel.ActiveDeviceId);
+            try
+            {
+                await AppConstants.SpotifyClient.Pause(MediaControlBarViewModel.ActiveDeviceId);
+            }
+            catch (SpotifyException)
+            {
+                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                return;
+            }
             SetPaused();
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await UpdateDisplay();
@@ -303,14 +343,36 @@ namespace Reverberate.ViewModels
 
         public async Task PreviousButton_Click()
         {
-            await AppConstants.SpotifyClient.Previous(MediaControlBarViewModel.ActiveDeviceId);
+            try
+            {
+                await AppConstants.SpotifyClient.Previous(MediaControlBarViewModel.ActiveDeviceId);
+            }
+            catch (SpotifyException ex)
+            {
+                if (ex.Error.Message.Contains("Device"))
+                {
+                    await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                }
+                return;
+            }
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await UpdateDisplay();
         }
 
         public async Task NextButton_Click()
         {
-            await AppConstants.SpotifyClient.Next(MediaControlBarViewModel.ActiveDeviceId);
+            try
+            {
+                await AppConstants.SpotifyClient.Next(MediaControlBarViewModel.ActiveDeviceId);
+            }
+            catch (SpotifyException ex)
+            {
+                if (ex.Error.Message.Contains("Device"))
+                {
+                    await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                }
+                return;
+            }
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await UpdateDisplay();
         }
@@ -323,7 +385,30 @@ namespace Reverberate.ViewModels
             }
             catch (SpotifyException)
             {
+                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                return;
             }
+        }
+
+        public void SetConnected()
+        {
+            ConnectionBarText = "Connected";
+            ConnectionBarColor = AppConstants.SpotifyGreenBrush;
+            ConnectionBarVisible = true;
+            Task hideConnectionBar = HideConnectionBar();
+        }
+
+        public void SetDisconnected()
+        {
+            ConnectionBarText = "Disconnected";
+            ConnectionBarColor = AppConstants.RedBrush;
+            ConnectionBarVisible = true;
+        }
+
+        public async Task HideConnectionBar()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            ConnectionBarVisible = false;
         }
     }
 }

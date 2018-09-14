@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Reverberate.ViewModels;
 using Reverberate.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +37,20 @@ namespace Reverberate
 
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exception = e.Exception;
+            StorageFolder storageFolder = ApplicationData.Current.LocalCacheFolder;
+            DateTimeOffset dateTime = DateTimeOffset.UtcNow;
+            string errorFilename = $"error_{dateTime.ToUnixTimeMilliseconds()}.txt";
+            string text = $"Occurred at: {dateTime.ToString("s")}{Environment.NewLine}Message: {e.Message}{Environment.NewLine}Exception Message: {e.Exception.Message}{Environment.NewLine}Exception Stack Trace: {e.Exception.StackTrace}";
+            Task<StorageFile> createFile = storageFolder.CreateFileAsync(errorFilename, CreationCollisionOption.ReplaceExisting).AsTask();
+            createFile.Wait();
+            Task writeOutput = FileIO.WriteTextAsync(createFile.Result, text).AsTask();
+            writeOutput.Wait();
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)

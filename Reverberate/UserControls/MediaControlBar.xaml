@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl x:Name="UserControl"
     x:Class="Reverberate.UserControls.MediaControlBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,10 +9,17 @@
     mc:Ignorable="d"
     d:DesignHeight="64"
     d:DesignWidth="640"
-    DataContext="{Binding MediaControlBarInstance, Source={StaticResource Locator}}">
+    DataContext="{Binding MediaControlBarInstance, Source={StaticResource Locator}}" Loaded="UserControl_Loaded">
 
     <Grid>
-        <CommandBar IsDynamicOverflowEnabled="False" OverflowButtonVisibility="Collapsed">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Background="{x:Bind Vm.ConnectionBarColor, Mode=OneWay}" HorizontalAlignment="Stretch" Visibility="{x:Bind Vm.ConnectionBarVisible, Mode=OneWay}">
+            <TextBlock Text="{x:Bind Vm.ConnectionBarText, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4"/>
+        </Border>
+        <CommandBar IsDynamicOverflowEnabled="False" OverflowButtonVisibility="Collapsed" Grid.Row="1">
             <CommandBar.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
@@ -23,6 +24,8 @@ namespace Reverberate.ViewModels
 
         private static bool windowReady;
         private static bool playerReady;
+        private static Task checkActivityTask;
+        private static CancellationTokenSource checkActivityCancellationTokenSource;
         public static string DeviceId { get; set; }
 
         public static event EventHandler<SpotifyWebPlaybackStateEventArgs> WebPlaybackStateChanged;
@@ -99,6 +102,28 @@ namespace Reverberate.ViewModels
                 {
                     playerReady = (bool)message["player"]["ready"];
                     DeviceId = (string)message["player"]["deviceId"];
+                    if (playerReady)
+                    {
+                        if (checkActivityTask != null)
+                        {
+                            checkActivityCancellationTokenSource.Cancel();
+                            checkActivityTask = null;
+                            checkActivityCancellationTokenSource.Dispose();
+                        }
+                        checkActivityCancellationTokenSource = new CancellationTokenSource();
+                        checkActivityTask = CheckActivity(checkActivityCancellationTokenSource.Token);
+                        HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetConnected();
+                    }
+                    else
+                    {
+                        if (checkActivityTask != null)
+                        {
+                            checkActivityCancellationTokenSource.Cancel();
+                            checkActivityTask = null;
+                            checkActivityCancellationTokenSource.Dispose();
+                        }
+                        HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetDisconnected();
+                    }
                     if (MediaControlBarViewModel.ActiveDeviceId == null)
                     {
                         MediaControlBarViewModel.ActiveDeviceId = DeviceId;
@@ -110,6 +135,48 @@ namespace Reverberate.ViewModels
                     WebPlaybackStateChanged?.Invoke(null, new SpotifyWebPlaybackStateEventArgs(playbackState));
                 }
             }
+        }
+
+        private static async Task CheckActivity(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                var devicesList = await AppConstants.SpotifyClient.GetUserDevices();
+                if (devicesList.Count == 0)
+                {
+                    await ReconnectClient();
+                }
+                else
+                {
+                    if (devicesList.FirstOrDefault(device => device.Id == DeviceId) == null)
+                    {
+                        await DisconnectPlayer();
+                        await ConnectPlayer();
+                    }
+                }
+                try
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+            }
+        }
+
+        public static async Task ReconnectClient(string deviceId)
+        {
+            if (deviceId == DeviceId)
+            {
+                await ReconnectClient();
+            }
+        }
+
+        public static async Task ReconnectClient()
+        {
+            await DisconnectPlayer();
+            await ConnectPlayer();
         }
 
         public static async Task SetPlayerName(string name)
@@ -130,6 +197,11 @@ namespace Reverberate.ViewModels
         public static async Task ConnectPlayer()
         {
             await InvokeScript("connectPlayer");
+        }
+
+        public static async Task DisconnectPlayer()
+        {
+            await InvokeScript("disconnectPlayer");
         }
 
         private static async Task<string> InvokeScript(string functionName, params string[] args)

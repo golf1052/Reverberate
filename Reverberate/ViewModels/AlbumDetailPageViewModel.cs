@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
+using Reverb;
 using Reverb.Models;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
@@ -113,7 +114,15 @@ namespace Reverberate.ViewModels
 
         public async Task PlayButton_Click()
         {
-            await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId, album.Uri);
+            try
+            {
+                await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId, album.Uri);
+            }
+            catch (SpotifyException)
+            {
+                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                return;
+            }
             await Task.Delay(TimeSpan.FromMilliseconds(250));
             await HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetupPlayback();
         }
@@ -130,7 +139,15 @@ namespace Reverberate.ViewModels
                 }
             }
 
-            await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId, album.Uri, offset: i);
+            try
+            {
+                await AppConstants.SpotifyClient.Play(MediaControlBarViewModel.ActiveDeviceId, album.Uri, offset: i);
+            }
+            catch (SpotifyException)
+            {
+                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                return;
+            }
         }
     }
 }

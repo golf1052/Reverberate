@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="f28be17e-032f-468a-8350-5bf880ad8ef2" Publisher="CN=Sanders" Version="1.0.0.0" />
+  <Identity Name="Reverberate" Publisher="CN=Sanders" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="f28be17e-032f-468a-8350-5bf880ad8ef2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Reverberate</DisplayName>

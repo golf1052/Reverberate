@@ -30,6 +30,11 @@ namespace Reverberate
             get { return new SolidColorBrush(SpotifyGreen); }
         }
 
+        public static SolidColorBrush RedBrush
+        {
+            get { return new SolidColorBrush(Color.FromArgb(255, 229, 20, 0)); }
+        }
+
         static AppConstants()
         {
             spotifyClient = new SpotifyClient(Secrets.ClientId, Secrets.ClientSecret, $"{Secrets.RedirectUrl}/");
