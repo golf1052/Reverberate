@@ -319,7 +319,7 @@ namespace Reverberate.ViewModels
             }
             catch (SpotifyException)
             {
-                await WebPlayerViewModel.ReconnectClient(MediaControlBarViewModel.ActiveDeviceId);
+                await WebPlayerViewModel.ReconnectPlayer(MediaControlBarViewModel.ActiveDeviceId);
                 return;
             }
             SetPaused();
