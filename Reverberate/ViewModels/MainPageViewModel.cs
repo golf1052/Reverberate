@@ -14,6 +14,20 @@ namespace Reverberate.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        private int menuSelectedIndex;
+        public int MenuSelectedIndex
+        {
+            get { return menuSelectedIndex; }
+            set { menuSelectedIndex = value; RaisePropertyChanged(nameof(MenuSelectedIndex)); }
+        }
+
+        private bool isMenuOpen;
+        public bool IsMenuOpen
+        {
+            get { return isMenuOpen; }
+            set { isMenuOpen = value; RaisePropertyChanged(nameof(IsMenuOpen)); }
+        }
+
         private readonly NavigationService navigationService;
 
         public MainPageViewModel(NavigationService navigationService)
@@ -28,6 +42,7 @@ namespace Reverberate.ViewModels
 
         public void OnNavigatedTo()
         {
+            MenuSelectedIndex = 0;
             navigationService.NavigateTo(nameof(AlbumsPage));
         }
 
@@ -40,6 +55,19 @@ namespace Reverberate.ViewModels
                 SpotifyConstants.SpotifySearchTypes.Track
             });
             navigationService.NavigateTo(nameof(SearchPage), results);
+        }
+
+        public void Menu_ItemClick(string label)
+        {
+            if (label == "Albums" && navigationService.CurrentPageKey != nameof(AlbumsPage))
+            {
+                navigationService.NavigateTo(nameof(AlbumsPage));
+            }
+            else if (label == "Browse" && navigationService.CurrentPageKey != nameof(NewReleasesPage))
+            {
+                navigationService.NavigateTo(nameof(NewReleasesPage));
+            }
+            IsMenuOpen = false;
         }
     }
 }

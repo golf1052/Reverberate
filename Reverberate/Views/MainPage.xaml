@@ -11,10 +11,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding MainPageInstance, Source={StaticResource Locator}}">
     
-    <controls:HamburgerMenu DisplayMode="Overlay" IsPaneOpen="False" PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+    <controls:HamburgerMenu x:Name="Menu" DisplayMode="Overlay" IsPaneOpen="{x:Bind Vm.IsMenuOpen, Mode=TwoWay}" PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" SelectedIndex="{x:Bind Vm.MenuSelectedIndex, Mode=TwoWay}" ItemClick="Menu_ItemClick">
         <controls:HamburgerMenu.ItemsSource>
             <controls:HamburgerMenuItemCollection>
                 <controls:HamburgerMenuGlyphItem Glyph="&#xE93C;" Label="Albums"/>
+                <controls:HamburgerMenuGlyphItem Glyph="&#xE142;" Label="Browse"/>
             </controls:HamburgerMenuItemCollection>
         </controls:HamburgerMenu.ItemsSource>
         <controls:HamburgerMenu.ItemTemplate>

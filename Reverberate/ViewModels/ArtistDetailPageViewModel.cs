@@ -66,7 +66,7 @@ namespace Reverberate.ViewModels
                 ArtistImageUrl = new Uri(highestResImage.Url);
             }
             ArtistName = artist.Name;
-            PopularTracks.AddRange(await AppConstants.SpotifyClient.GetArtistsTopTracks(artist.Id, "us"));
+            PopularTracks.AddRange(await AppConstants.SpotifyClient.GetArtistsTopTracks(artist.Id, HelperMethods.GetUsersCountry()));
             SpotifyPagingObject<SpotifyAlbum> albums = await AppConstants.SpotifyClient.GetArtistsAlbums(artist.Id, new List<Reverb.SpotifyConstants.SpotifyArtistIncludeGroups>()
             {
                 Reverb.SpotifyConstants.SpotifyArtistIncludeGroups.Album

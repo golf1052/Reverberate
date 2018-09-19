@@ -1,0 +1,35 @@
+﻿<Page
+    x:Class="Reverberate.Views.NewReleasesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reverberate.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="using:Reverberate.UserControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding NewReleasesPageInstance, Source={StaticResource Locator}}">
+
+    <Grid>
+        <Pivot x:Name="NewReleasesPivot" Title="New Releases">
+            <PivotItem Header="All">
+                <ListView x:Name="AllListView" ItemsSource="{x:Bind Vm.All, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="AllListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="For You">
+                <ListView x:Name="ForYouListView" ItemsSource="{x:Bind Vm.ForYou, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="ForYouListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <usercontrols:AlbumListViewItem/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

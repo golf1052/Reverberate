@@ -28,7 +28,7 @@ namespace Reverberate.ViewModels
         {
             AlbumGrouping = new ObservableCollection<IGrouping<string, SpotifyAlbum>>();
             List<SpotifyAlbum> albums = new List<SpotifyAlbum>();
-            var albumsList = await AppConstants.SpotifyClient.GetUserSavedAlbums();
+            var albumsList = await AppConstants.SpotifyClient.GetUserSavedAlbums(50);
             foreach (var album in albumsList.Items)
             {
                 albums.Add(album.Album);

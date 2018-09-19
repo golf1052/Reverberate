@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Reverb.Models;
+using Reverberate.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -58,9 +59,9 @@ namespace Reverberate.UserControls
             set { trackLength = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TrackLength))); }
         }
 
-        public SpotifyTrack Model
+        public SavedTrack Model
         {
-            get { return (SpotifyTrack)DataContext; }
+            get { return (SavedTrack)DataContext; }
         }
 
         public TrackItem()
@@ -73,12 +74,35 @@ namespace Reverberate.UserControls
         {
             if (Model != null)
             {
-                TrackNumber = Model.TrackNumber;
-                AddSaveIcon = Symbol.Accept;
-                TrackTitle = Model.Name;
-                IsExplicit = Model.Explicit;
-                TimeSpan trackLength = TimeSpan.FromMilliseconds(Model.Duration);
+                TrackNumber = Model.Track.TrackNumber;
+                TrackTitle = Model.Track.Name;
+                IsExplicit = Model.Track.Explicit;
+                TimeSpan trackLength = TimeSpan.FromMilliseconds(Model.Track.Duration);
                 TrackLength = trackLength.MinimalToString();
+                if (Model.Saved)
+                {
+                    AddSaveIcon = Symbol.Accept;
+                }
+                else
+                {
+                    AddSaveIcon = Symbol.Add;
+                }
+            }
+        }
+
+        private async void AddSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Model.Saved)
+            {
+                await AppConstants.SpotifyClient.RemoveTrack(Model.Track.Id);
+                Model.Saved = false;
+                AddSaveIcon = Symbol.Add;
+            }
+            else
+            {
+                await AppConstants.SpotifyClient.SaveTrack(Model.Track.Id);
+                Model.Saved = true;
+                AddSaveIcon = Symbol.Accept;
             }
         }
     }

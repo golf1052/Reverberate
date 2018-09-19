@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
 using Reverb.Models;
+using Reverberate.Models;
 using Reverberate.Views;
 
 namespace Reverberate.ViewModels
@@ -19,7 +20,7 @@ namespace Reverberate.ViewModels
 
         public ObservableCollection<SpotifyArtist> Artists { get; set; }
 
-        public ObservableCollection<SpotifyTrack> Tracks { get; set; }
+        public ObservableCollection<SavedTrack> Tracks { get; set; }
 
         private string searchQuery;
         public string SearchQuery
@@ -33,14 +34,14 @@ namespace Reverberate.ViewModels
             this.navigationService = navigationService;
             Albums = new ObservableCollection<SpotifyAlbum>();
             Artists = new ObservableCollection<SpotifyArtist>();
-            Tracks = new ObservableCollection<SpotifyTrack>();
+            Tracks = new ObservableCollection<SavedTrack>();
         }
 
-        public void OnNavigatedTo(SpotifySearch results)
+        public async Task OnNavigatedTo(SpotifySearch results)
         {
             Albums = new ObservableCollection<SpotifyAlbum>();
             Artists = new ObservableCollection<SpotifyArtist>();
-            Tracks = new ObservableCollection<SpotifyTrack>();
+            Tracks = new ObservableCollection<SavedTrack>();
             if (results.Albums != null)
             {
                 Albums.AddRange(results.Albums.Items);
@@ -51,13 +52,21 @@ namespace Reverberate.ViewModels
             }
             if (results.Tracks != null)
             {
-                Tracks.AddRange(results.Tracks.Items);
+                List<bool> savedTracks = await AppConstants.SpotifyClient.GetSavedTracks(results.Tracks.Items.Select(track => track.Id).ToList());
+                for (int i = 0; i < savedTracks.Count; i++)
+                {
+                    Tracks.Add(new SavedTrack()
+                    {
+                        Track = results.Tracks.Items[i],
+                        Saved = savedTracks[i]
+                    });
+                }
             }
         }
 
-        public async Task TracksListView_ItemClick(SpotifyTrack track)
+        public async Task TracksListView_ItemClick(SavedTrack track)
         {
-            SpotifyAlbum fullAlbum = await AppConstants.SpotifyClient.GetAlbum(track.Album.Id);
+            SpotifyAlbum fullAlbum = await AppConstants.SpotifyClient.GetAlbum(track.Track.Album.Id);
             navigationService.NavigateTo(nameof(AlbumDetailPage), fullAlbum);
         }
 

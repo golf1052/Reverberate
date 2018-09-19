@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Views;
 using Reverberate.ViewModels;
+using Windows.Globalization;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
@@ -15,6 +17,13 @@ namespace Reverberate
     public static class HelperMethods
     {
         public static NavigationService NavigationService { get; set; }
+
+        private static readonly string[] releaseDateFormats = new string[]
+        {
+            "yyyy",
+            "yyyy-MM",
+            "yyyy-MM-dd"
+        };
 
         public static void AddRange<T>(this ObservableCollection<T> observableCollection, IEnumerable<T> collection)
         {
@@ -66,6 +75,20 @@ namespace Reverberate
             }
             stringBuilder.Append(timeSpan.Seconds.ToString("00"));
             return stringBuilder.ToString();
+        }
+
+        public static string GetUsersCountry()
+        {
+            return new GeographicRegion().CodeTwoLetter;
+        }
+
+        public static DateTimeOffset ParseReleaseDate(string releaseDate)
+        {
+            DateTimeOffset.TryParseExact(releaseDate,
+                releaseDateFormats,
+                null,
+                DateTimeStyles.AssumeUniversal, out DateTimeOffset result);
+            return result;
         }
 
         public static void EnableBackButton(EventHandler<BackRequestedEventArgs> handler)

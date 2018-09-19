@@ -26,7 +26,9 @@ namespace Reverberate.ViewModels
         private static bool playerReady;
         private static Task checkActivityTask;
         private static CancellationTokenSource checkActivityCancellationTokenSource;
-        public static string DeviceId { get; set; }
+        public static string DeviceId { get; private set; }
+        public static bool PlayerConnected { get; private set; }
+        public static bool PlayerReconnecting { get; private set; }
 
         public static event EventHandler<SpotifyWebPlaybackStateEventArgs> WebPlaybackStateChanged;
 
@@ -38,6 +40,8 @@ namespace Reverberate.ViewModels
             webView.ScriptNotify += WebView_ScriptNotify;
             webView.Source = new Uri("ms-appx-web:///SpotifyWebView/index.html");
             WebView = webView;
+
+            PlayerConnected = false;
         }
 
         private static async void WebView_ScriptNotify(object sender, NotifyEventArgs e)
@@ -104,18 +108,23 @@ namespace Reverberate.ViewModels
                     DeviceId = (string)message["player"]["deviceId"];
                     if (playerReady)
                     {
-                        if (checkActivityTask != null)
+                        if (!PlayerConnected)
                         {
-                            checkActivityCancellationTokenSource.Cancel();
-                            checkActivityTask = null;
-                            checkActivityCancellationTokenSource.Dispose();
-                        }
-                        checkActivityCancellationTokenSource = new CancellationTokenSource();
-                        checkActivityTask = CheckActivity(checkActivityCancellationTokenSource.Token);
-                        HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetConnected();
+                            PlayerConnected = true;
+                            if (checkActivityTask != null)
+                            {
+                                checkActivityCancellationTokenSource.Cancel();
+                                checkActivityTask = null;
+                                checkActivityCancellationTokenSource.Dispose();
+                            }
+                            checkActivityCancellationTokenSource = new CancellationTokenSource();
+                            checkActivityTask = CheckActivity(checkActivityCancellationTokenSource.Token);
+                            HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetConnected();
+                        }   
                     }
                     else
                     {
+                        PlayerConnected = false;
                         if (checkActivityTask != null)
                         {
                             checkActivityCancellationTokenSource.Cancel();
@@ -138,6 +147,7 @@ namespace Reverberate.ViewModels
                 {
                     if (!(bool)message["player"]["connected"])
                     {
+                        PlayerConnected = false;
                         HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetDisconnected();
                     }
                 }
@@ -181,9 +191,18 @@ namespace Reverberate.ViewModels
 
         public static async Task ReconnectPlayer()
         {
+            bool wasPlaying = HelperMethods.GetViewModelLocator().MediaControlBarInstance.Playing;
+            PlayerReconnecting = true;
+            HelperMethods.GetViewModelLocator().MediaControlBarInstance.ReconnectButtonEnabled = false;
             await DisconnectPlayer();
             await Task.Delay(TimeSpan.FromMilliseconds(500));
             await ConnectPlayer();
+            PlayerReconnecting = false;
+            HelperMethods.GetViewModelLocator().MediaControlBarInstance.ReconnectButtonEnabled = true;
+            if (wasPlaying && !HelperMethods.GetViewModelLocator().MediaControlBarInstance.Playing)
+            {
+                await HelperMethods.GetViewModelLocator().MediaControlBarInstance.Play();
+            }
         }
 
         public static async Task SetPlayerName(string name)

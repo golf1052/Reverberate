@@ -18,7 +18,9 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Text="{x:Bind TrackNumber, Mode=OneWay}" Grid.Column="0" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" Margin="4,0" HorizontalAlignment="Right"/>
-        <SymbolIcon Symbol="{x:Bind AddSaveIcon, Mode=OneWay}" Grid.Column="1" VerticalAlignment="Center" Margin="4,0"/>
+        <Button x:Name="AddSaveButton" Grid.Column="1" VerticalAlignment="Center" Margin="4,0" Background="{x:Null}" Click="AddSaveButton_Click">
+            <SymbolIcon Symbol="{x:Bind AddSaveIcon, Mode=OneWay}"/>
+        </Button>
         <TextBlock Text="{x:Bind TrackTitle, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="4,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
         <TextBlock Text="Explicit" Visibility="{x:Bind IsExplicit, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Grid.Column="3" VerticalAlignment="Center" Margin="4,0"/>
         <TextBlock Text="{x:Bind TrackLength, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="4,0"/>

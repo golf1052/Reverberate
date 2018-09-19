@@ -82,5 +82,10 @@ namespace Reverberate.UserControls
         {
             loaded = true;
         }
+
+        private async void ReconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Vm.ReconnectButton_Click();
+        }
     }
 }

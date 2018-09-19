@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Reverb.Models;
-using Reverberate.Models;
 using Reverberate.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -23,24 +22,22 @@ namespace Reverberate.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SearchPage : Page
+    public sealed partial class NewReleasesPage : Page
     {
-        public SearchPageViewModel Vm
+        public NewReleasesPageViewModel Vm
         {
-            get { return (SearchPageViewModel)DataContext; }
+            get { return (NewReleasesPageViewModel)DataContext; }
         }
 
-        public SearchPage()
+        public NewReleasesPage()
         {
             this.InitializeComponent();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            SpotifySearch results = (SpotifySearch)e.Parameter;
-            SearchPivot.Items.Remove(SearchPivot.Items.Single(p => (string)((PivotItem)p).Header == "Playlists"));
             HelperMethods.EnableBackButton();
-            await Vm.OnNavigatedTo(results);
+            await Vm.OnNavigatedTo();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -48,19 +45,14 @@ namespace Reverberate.Views
             HelperMethods.DisableBackButton();
         }
 
-        private async void TracksListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void AllListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await Vm.TracksListView_ItemClick((SavedTrack)e.ClickedItem);
+            await Vm.AllListView_ItemClick((SpotifyAlbum)e.ClickedItem);
         }
 
-        private async void AlbumsListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void ForYouListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            await Vm.AlbumsListView_ItemClick((SpotifyAlbum)e.ClickedItem);
-        }
-
-        private void ArtistsListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            Vm.ArtistsListView_ItemClick((SpotifyArtist)e.ClickedItem);
+            await Vm.ForYouListView_ItemClick((SpotifyAlbum)e.ClickedItem);
         }
     }
 }

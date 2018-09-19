@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Reverb.Models;
-using Reverberate.Models;
 using Reverberate.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -23,40 +21,26 @@ namespace Reverberate.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumDetailPage : Page
+    public sealed partial class BrowsePage : Page
     {
-        public AlbumDetailPageViewModel Vm
+        public BrowsePageViewModel Vm
         {
-            get
-            {
-                return (AlbumDetailPageViewModel)DataContext;
-            }
+            get { return (BrowsePageViewModel)DataContext; }
         }
 
-        public AlbumDetailPage()
+        public BrowsePage()
         {
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HelperMethods.EnableBackButton();
-            await Vm.OnNavigatedTo((SpotifyAlbum)e.Parameter);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             HelperMethods.DisableBackButton();
-        }
-
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Vm.PlayButton_Click();
-        }
-
-        private async void TracksListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            await Vm.TracksListView_ItemClick((SavedTrack)e.ClickedItem);
         }
     }
 }

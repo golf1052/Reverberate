@@ -116,6 +116,15 @@ namespace Reverberate.ViewModels
             set { connectionBarColor = value; RaisePropertyChanged(nameof(ConnectionBarColor)); }
         }
 
+        private bool reconnectButtonEnabled;
+        public bool ReconnectButtonEnabled
+        {
+            get { return reconnectButtonEnabled; }
+            set { reconnectButtonEnabled = value; RaisePropertyChanged(nameof(ReconnectButtonEnabled)); }
+        }
+
+        public bool Playing { get; private set; }
+
         private SystemMediaTransportControls systemMediaTransportControls;
         private SystemMediaTransportControlsDisplayUpdater display;
 
@@ -131,6 +140,8 @@ namespace Reverberate.ViewModels
             ConnectionBarVisible = false;
             ConnectionBarColor = AppConstants.RedBrush;
             ConnectionBarText = "Disconnected";
+            ReconnectButtonEnabled = true;
+
             PlayPauseIcon = Symbol.Play;
             systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             systemMediaTransportControls.IsPlayEnabled = true;
@@ -249,7 +260,7 @@ namespace Reverberate.ViewModels
                         {
                             MediaControlBarViewModel.ActiveDeviceId = device.Id;
                             SetDeviceButtonColor(device.Id);
-                            await AppConstants.SpotifyClient.TransferPlayback(device.Id);
+                            await AppConstants.SpotifyClient.TransferPlayback(device.Id, true);
                         };
                         menuFlyout.Items.Add(menuFlyoutItem);
                     }
@@ -332,6 +343,7 @@ namespace Reverberate.ViewModels
             PlayPauseIcon = Symbol.Pause;
             PlayPauseLabel = "Pause";
             systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+            Playing = true;
         }
 
         public void SetPaused()
@@ -339,6 +351,7 @@ namespace Reverberate.ViewModels
             PlayPauseIcon = Symbol.Play;
             PlayPauseLabel = "Play";
             systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Paused;
+            Playing = false;
         }
 
         public async Task PreviousButton_Click()
@@ -390,8 +403,17 @@ namespace Reverberate.ViewModels
             }
         }
 
+        public async Task ReconnectButton_Click()
+        {
+            if (!WebPlayerViewModel.PlayerConnected && !WebPlayerViewModel.PlayerReconnecting)
+            {
+                await WebPlayerViewModel.ReconnectPlayer(MediaControlBarViewModel.ActiveDeviceId);
+            }
+        }
+
         public void SetConnected()
         {
+            ReconnectButtonEnabled = false;
             ConnectionBarText = "Connected";
             ConnectionBarColor = AppConstants.SpotifyGreenBrush;
             ConnectionBarVisible = true;
@@ -400,6 +422,7 @@ namespace Reverberate.ViewModels
 
         public void SetDisconnected()
         {
+            ReconnectButtonEnabled = true;
             ConnectionBarText = "Disconnected";
             ConnectionBarColor = AppConstants.RedBrush;
             ConnectionBarVisible = true;

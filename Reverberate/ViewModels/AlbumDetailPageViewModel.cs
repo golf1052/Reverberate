@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
 using Reverb;
 using Reverb.Models;
+using Reverberate.Models;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -66,24 +67,36 @@ namespace Reverberate.ViewModels
             set { savedSaveText = value; RaisePropertyChanged(nameof(SavedSaveText)); }
         }
 
-        public ObservableCollection<SpotifyTrack> Tracks { get; set; }
+        public ObservableCollection<SavedTrack> Tracks { get; set; }
 
         private SpotifyAlbum album;
 
         public AlbumDetailPageViewModel(NavigationService navigationService)
         {
             this.navigationService = navigationService;
-            Tracks = new ObservableCollection<SpotifyTrack>();
+            Tracks = new ObservableCollection<SavedTrack>();
         }
 
         public async Task OnNavigatedTo(SpotifyAlbum album)
         {
-            Tracks = new ObservableCollection<SpotifyTrack>();
+            Tracks = new ObservableCollection<SavedTrack>();
             this.album = album;
             AlbumImageUrl = new Uri(album.GetLargestImage().Url);
             AlbumName = album.Name;
             AlbumArtist = string.Join(", ", album.Artists.Select(artist => artist.Name));
-            ReleaseDate = album.ReleaseDate;
+            DateTimeOffset releaseDate = HelperMethods.ParseReleaseDate(album.ReleaseDate);
+            if (album.ReleaseDatePrecision == "year")
+            {
+                ReleaseDate = releaseDate.Year.ToString();
+            }
+            else if (album.ReleaseDatePrecision == "month")
+            {
+                ReleaseDate = releaseDate.ToString("y");
+            }
+            else if (album.ReleaseDatePrecision == "day")
+            {
+                ReleaseDate = releaseDate.ToString("d");
+            }
             if (album.Tracks.Total == 1)
             {
                 NumSongs = $"{album.Tracks.Total} song";
@@ -95,18 +108,30 @@ namespace Reverberate.ViewModels
             SavedSaveText = "Saved";
             TimeSpan albumLength = TimeSpan.Zero;
             SpotifyPagingObject<SpotifyTrack> tracksPaging = album.Tracks;
-            foreach (var track in tracksPaging.Items)
+            List<bool> savedTracks = await AppConstants.SpotifyClient.GetSavedTracks(tracksPaging.Items.Select(track => track.Id).ToList());
+            for (int i = 0; i < tracksPaging.Items.Count; i++)
             {
-                Tracks.Add(track);
-                albumLength += TimeSpan.FromMilliseconds(track.Duration);
+                SavedTrack savedTrack = new SavedTrack()
+                {
+                    Track = tracksPaging.Items[i],
+                    Saved = savedTracks[i]
+                };
+                Tracks.Add(savedTrack);
+                albumLength += TimeSpan.FromMilliseconds(savedTrack.Track.Duration);
             }
             while (tracksPaging.Next != null)
             {
                 tracksPaging = await AppConstants.SpotifyClient.GetNextPage(tracksPaging);
-                foreach (var track in tracksPaging.Items)
+                savedTracks = await AppConstants.SpotifyClient.GetSavedTracks(tracksPaging.Items.Select(track => track.Id).ToList());
+                for (int i = 0; i < tracksPaging.Items.Count; i++)
                 {
-                    Tracks.Add(track);
-                    albumLength += TimeSpan.FromMilliseconds(track.Duration);
+                    SavedTrack savedTrack = new SavedTrack()
+                    {
+                        Track = tracksPaging.Items[i],
+                        Saved = savedTracks[i]
+                    };
+                    Tracks.Add(savedTrack);
+                    albumLength += TimeSpan.FromMilliseconds(savedTrack.Track.Duration);
                 }
             }
             AlbumLength = albumLength.MinimalToString();
@@ -127,7 +152,7 @@ namespace Reverberate.ViewModels
             await HelperMethods.GetViewModelLocator().MediaControlBarInstance.SetupPlayback();
         }
 
-        public async Task TracksListView_ItemClick(SpotifyTrack track)
+        public async Task TracksListView_ItemClick(SavedTrack track)
         {
             List<SpotifyTrack> tracksToPlay = new List<SpotifyTrack>();
             int i = 0;

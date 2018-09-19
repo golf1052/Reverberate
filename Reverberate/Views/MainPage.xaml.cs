@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Reverberate.ViewModels;
 using Reverberate.Views;
 using Windows.Foundation;
@@ -45,6 +46,12 @@ namespace Reverberate
         private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             await Vm.SearchBox_QuerySubmitted(args.QueryText);
+        }
+
+        private void Menu_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var clickedItem = (HamburgerMenuItem)e.ClickedItem;
+            Vm.Menu_ItemClick(clickedItem.Label);
         }
     }
 }

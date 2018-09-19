@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    d:DesignHeight="64"
+    d:DesignHeight="120"
     d:DesignWidth="640"
     DataContext="{Binding MediaControlBarInstance, Source={StaticResource Locator}}" Loaded="UserControl_Loaded">
 
@@ -17,7 +17,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Background="{x:Bind Vm.ConnectionBarColor, Mode=OneWay}" HorizontalAlignment="Stretch" Visibility="{x:Bind Vm.ConnectionBarVisible, Mode=OneWay}">
-            <TextBlock Text="{x:Bind Vm.ConnectionBarText, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4"/>
+            <Button x:Name="ReconnectButton" Background="{x:Null}" HorizontalAlignment="Center" Margin="0,4" Click="ReconnectButton_Click" IsEnabled="{x:Bind Vm.ReconnectButtonEnabled, Mode=OneWay}">
+                <TextBlock Text="{x:Bind Vm.ConnectionBarText, Mode=OneWay}"/>
+            </Button>
         </Border>
         <CommandBar IsDynamicOverflowEnabled="False" OverflowButtonVisibility="Collapsed" Grid.Row="1">
             <CommandBar.Content>
